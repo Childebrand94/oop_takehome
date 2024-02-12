@@ -1,0 +1,142 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+/* Container for the sorting options */
+.sort {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 10px 0;
+    background-color: #f0f0f0;
+}
+
+/* Hide the radio buttons but keep them accessible for screen readers */
+.sort-option[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* Style for the labels, making them look like clickable buttons */
+.sort-option-label {
+    display: inline-block;
+    cursor: pointer;
+    padding: 5px 10px;
+    background-color: #e7e7e7;
+    /* Slightly darker background for contrast */
+    border-radius: 5px;
+    /* Rounded corners */
+    transition: background-color 0.3s;
+    /* Smooth background color transition */
+}
+
+/* Change background color when hovering over label */
+.sort-option-label:hover {
+    background-color: #d0d0d0;
+}
+
+/* Style for label when its radio button is checked */
+.sort-option[type="radio"]:checked+.sort-option-label {
+    background-color: #007bff;
+    /* Active option background color */
+    color: #ffffff;
+    /* White text color */
+    font-weight: bold;
+}
+
+/* Container for product cards */
+.products-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+    justify-content: space-around;
+}
+
+/* Individual product card styling */
+.product-card {
+    position: relative;
+    width: calc(33.333% - 20px);
+    border: 1px solid #e7e7e7;
+    border-radius: 5px;
+    overflow: hidden;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+.product-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.product-card .card-content {
+    padding: 15px;
+}
+
+.product-card .title {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.product-card .description {
+    font-size: 14px;
+    color: #666;
+}
+
+.product-card .price {
+    font-size: 16px;
+    color: #007bff;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+/* Sales badge styling */
+.product-card .sales-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #ff4500;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: bold;
+    z-index: 1;
+}
+
+@media (max-width: 768px) {
+    .product-card {
+        width: calc(50% - 20px);
+    }
+}
+
+@media (max-width: 480px) {
+    .product-card {
+        width: calc(100% - 20px);
+    }
+
+    .nav .filter-options {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

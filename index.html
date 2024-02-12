@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Products</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="sort" id="sort"></div>
+
+        <div class="products-container" id="products-container"></div>
+    </div>
+
+    <script>
+        // Create a Product card containing an image, description, price, title,
+        // and an optional sales badge.
+        class Product {
+            #title;
+            #desc;
+            #price;
+            #sale;
+
+            constructor(obj) {
+                this.#title = obj.title
+                this.#desc = obj.desc
+                this.#price = obj.price
+                this.#sale = obj.sale
+            }
+
+            render() {
+                const products = document.querySelector("#products-container")
+
+                const productContainer = document.createElement("div")
+                productContainer.classList.add("product-card")
+
+                const image = document.createElement("img")
+                image.classList.add("product-card")
+                image.setAttribute("src", "http://via.placeholder.com/144x180")
+
+                const price = document.createElement("p")
+                price.classList.add("price")
+                price.innerText = `$${this.#price.toFixed(2)}`;
+
+                const productTitle = document.createElement("h1")
+                productTitle.classList.add("title")
+                productTitle.innerText = this.#title
+
+                const desc = document.createElement("p")
+                desc.classList.add("description")
+                desc.innerText = this.#desc
+
+                const productContent = document.createElement("div")
+                productContent.classList.add("card-content")
+                productContent.append(productTitle, price, desc)
+
+                if (this.#sale) {
+                    const badge = document.createElement("div");
+                    badge.classList.add("sales-badge");
+                    badge.innerText = "Sale";
+                    productContainer.append(badge);
+                }
+
+
+                productContainer.append(image, productContent)
+                products.append(productContainer)
+            }
+
+        }
+
+        /* 
+         The Nav allows users to sort products by creating two radio buttons that fire 
+         a custom event listener to trigger the Grid to sort and re render the 
+         products
+        */
+        class Nav {
+            #label;
+            #attr;
+            static #count = 0;
+
+            constructor(obj) {
+                this.#label = obj.label;
+                this.#attr = obj.attr;
+                Nav.#count++;
+            }
+
+            render() {
+                const sort = document.querySelector("#sort")
+
+                const sortOption = document.createElement("input");
+                sortOption.type = "radio";
+                sortOption.id = `option${Nav.#count}`;
+                sortOption.value = this.#attr;
+                sortOption.name = "sort-option";
+                sortOption.className = "sort-option"
+
+                const label = document.createElement("label");
+                label.htmlFor = sortOption.id;
+                label.innerText = this.#label;
+                label.className = "sort-option-label"
+
+                const sortContainer = document.createElement("div")
+                sortContainer.classList.add("sort-container")
+                sortContainer.append(sortOption, label)
+
+
+
+                const dispatchCustomEvent = (radioElement) => {
+                    const customEvent = new CustomEvent('radioChange', {
+                        detail: {
+                            attr: radioElement.value
+                        },
+                        bubbles: true
+                    });
+
+                    radioElement.dispatchEvent(customEvent);
+                };
+
+                sortOption.addEventListener('change', function () {
+                    dispatchCustomEvent(this);
+                });
+
+                sort.append(sortContainer);
+            }
+
+        }
+
+        /*
+            The Grid class controls rendering and sorting of the Products and Nav. Grid will store
+            product data in a static field if passed in during initialization. This 
+            allows for the grid to sort the products with out have to re fetch 
+            the data, and avoids creating a singleton aligning with the principle 
+            of minimal global state. 
+        */
+        class Grid {
+            static productData = null;
+
+            constructor(products = null, navs = null) {
+                if (products === null && Grid.productData) {
+                    this.products = Grid.productData
+                } else {
+                    this.products = products
+                    Grid.productData = products
+                }
+                this.navs = navs
+            }
+
+            #removeProducts() {
+                const products = this.#getAllElementNodes("product-card")
+
+                if (products) {
+                    products.forEach(element => element.remove())
+                }
+            }
+
+            #removeNavs() {
+                const sortContainer = this.#getAllElementNodes("sort-container")
+
+                if (sortContainer) {
+                    sortContainer.forEach(element => element.remove())
+                }
+            }
+
+            renderProducts() {
+                this.#removeProducts()
+                if (this.products) {
+                    this.products.forEach(element => {
+                        let product = new Product(element)
+                        product.render()
+                    });
+                }
+            }
+
+            renderNavs() {
+                this.#removeNavs()
+                if (this.navs) {
+                    this.navs.forEach(element => {
+                        let navs = new Nav(element)
+                        navs.render()
+                    });
+                }
+            }
+
+            #getAllElementNodes(className) {
+                const products = document.querySelectorAll(`.${className}`)
+                return products
+            }
+
+            sortProducts(sortOption) {
+                this.products.sort((a, b) => {
+                    if (typeof a[sortOption] === 'string' && typeof b[sortOption] === 'string') {
+                        return a[sortOption].localeCompare(b[sortOption]);
+                    } else {
+                        return a[sortOption] - b[sortOption];
+                    }
+                });
+                this.renderProducts();
+            }
+        }
+
+        // Sorting Event Listener
+        document.addEventListener('radioChange', function (e) {
+            e.preventDefault()
+            const grid = new Grid()
+            grid.sortProducts(e.detail.attr)
+        });
+
+        window.addEventListener('load', init);
+
+        function init() {
+            const productsUrl = 'http://private-152094-gbitest.apiary-mock.com/products';
+            const navUrl = 'http://private-152094-gbitest.apiary-mock.com/navs';
+
+
+            Promise.all([
+                fetch(productsUrl).then(response =>
+                    response.ok ?
+                        response.json() :
+                        Promise.reject(`HTTP error! status: ${response.status}`)),
+
+                fetch(navUrl).then(response =>
+                    response.ok ?
+                        response.json() :
+                        Promise.reject(`HTTP error! status: ${response.status}`))
+            ])
+                .then(([productsData, navsData]) => {
+                    const grid = new Grid(productsData, navsData);
+                    grid.renderProducts()
+                    grid.renderNavs();
+
+
+
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        }
+
+    </script>
+
+</body>
+
+</html>
