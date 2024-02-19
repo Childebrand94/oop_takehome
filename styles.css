@@ -32,11 +32,8 @@ body {
     cursor: pointer;
     padding: 5px 10px;
     background-color: #e7e7e7;
-    /* Slightly darker background for contrast */
     border-radius: 5px;
-    /* Rounded corners */
     transition: background-color 0.3s;
-    /* Smooth background color transition */
 }
 
 /* Change background color when hovering over label */

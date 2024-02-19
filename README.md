@@ -1,17 +1,17 @@
-#Product Grid Viewer Development Overview
+# Product Grid Viewer Development Overview
 
-##Introduction
+### Task
+Implement a web page using OOP (Object-Oriented Programming) principles to 
+manipulate the DOM, creating three main objects: a Grid, Nav, and Product.
 
-This document provides an in-depth look at the development process, 
-architectural decisions, and challenges encountered during the creation of the 
-Product Grid Viewer, a web application designed to display and sort a collection 
-of products in a grid layout. The application emphasizes interactive features 
-such as sorting products based on attributes and highlighting sale items, all 
-realized through vanilla JavaScript, HTML, and CSS.
+### User story
+- As a user, they can view the products on the page, with certain items marked as on sale.
+- The user can sort the products based on price or name by selecting the corresponding option in the nav.
+- The sorting operation will not trigger a whole page refresh.
 
-##Development Approach
+## Development Approach
 
-###Object-Oriented JavaScript
+### Object-Oriented JavaScript
 
 The application is structured around three main classes: 
 Product, Nav, and Grid, each responsible for a distinct aspect of the 
@@ -29,7 +29,7 @@ application's functionality:
     and navigation elements based on data provided. It listens for 
     custom events from Nav instances to sort products dynamically.
 
-###Data Management
+### Data Management
 
 One of the key challenges was managing product data efficiently, 
 especially maintaining the state post-initial fetch. To address this:
@@ -39,3 +39,16 @@ especially maintaining the state post-initial fetch. To address this:
     data set was readily available for re-rendering or sorting operations 
     without requiring additional fetch requests, thus optimizing performance 
     and resource usage.
+    
+### Styling 
+
+This project showcases a dynamic and responsive web page designed to display 
+a collection of products.
+
+### Key Features 
+
+- Global Reset and Box Sizing: Resets default margins to ensure a consistent 
+experience across multiple browsers.
+- Responsive Layout: The application adapts to various screen sizes.
+- Product Cards: Items are presented in a simple format, allowing users to easily 
+absorb the key information. Cards are designed to respond to user actions.
