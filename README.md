@@ -25,9 +25,9 @@ application's functionality:
   products based on selected criteria. It leverages custom events 
   to communicate sorting attributes (attr) to the Grid class.
     
-    Grid Class: Orchestrates the overall layout, rendering products 
-    and navigation elements based on data provided. It listens for 
-    custom events from Nav instances to sort products dynamically.
+- Grid Class: Orchestrates the overall layout, rendering products 
+  and navigation elements based on data provided. It listens for 
+  custom events from Nav instances to sort products dynamically.
 
 ### Data Management
 
